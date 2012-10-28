@@ -5,9 +5,14 @@ Q = require("q");
 
 // Backend 1
 http.createServer(function (req, res) {
-	res.writeHead(200, { 'Content-Type': 'text/plain' });
-	res.write('BACKEND 1 request successfully proxied: ' + req.url +'\n' + JSON.stringify(req.headers, true, 2));
-	res.end();
+	res.writeHead(200, {
+		"Content-Type": "text/plain",
+		"Cache-Control": "s-max-age=5"
+	});
+	setTimeout(function() { 
+		res.write('BACKEND 1 request successfully proxied: ' + req.url +'\n' + JSON.stringify(req.headers, true, 2));
+		res.end();
+	}, 6000);
 }).listen(9001);
 
 // Backend 2
@@ -19,7 +24,7 @@ http.createServer(function (req, res) {
 
 
 // Define backend and proxy
-var backend1 = new rollingpin.Backend({port: 9001}),
+var backend1 = new rollingpin.Backend({port: 9001, timeout: 1}),
 	backend2 = new rollingpin.Backend({port: 9002}),
 	backend3 = new rollingpin.Backend({port: 9003}); // error
 	
@@ -52,9 +57,11 @@ ruleSuite.when(function(config) {
 	var defer = Q.defer();
 	
 	cacheManager.get(config.req).then(function(result) {
+		console.log("from cache");
 		result.writeResponse(config.res);
 	},
 	function() {
+		console.log("from backend");
 		backend1.forward(config.req, config.res).then(function(result) {
 			cacheManager.cache(config.req, result);
 			defer.resolve();
@@ -98,12 +105,23 @@ http.createServer(function (req, res) {
 	};
 	
 	ruleSuite.run(config).then(function(config) {
-		config.res.writeHead(500, {
+		config.res.writeHead(502, {
 			"Content-Type": "text/plain"
 		});
-		config.res.write("Reverse proxy error : no rule matched");
+		config.res.write("Bad Gateway");
 		config.res.end();
 	});
 	
 }).listen(8000);
 
+var options = {
+  host: 'localhost',
+  port: 8000,
+  path: '/b1/',
+  method: 'GET'
+};
+
+http.request(options, function(res) {
+	console.log(res.statusCode);
+	console.log(res.headers);
+}).end();
