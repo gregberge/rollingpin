@@ -52,15 +52,13 @@ ruleSuite.when(function(config) {
 	var defer = Q.defer();
 	
 	cacheManager.get(config.req).then(function(result) {
-		if(typeof result !== "undefined") {
-			result.writeResponse(config.res);
-		}
-		else {
-			backend1.forward(config.req, config.res).then(function(result) {
-				cacheManager.cache(config.req, result);
-				defer.resolve();
-			});
-		}
+		result.writeResponse(config.res);
+	},
+	function() {
+		backend1.forward(config.req, config.res).then(function(result) {
+			cacheManager.cache(config.req, result);
+			defer.resolve();
+		});
 	});
 	
 	return defer.promise;
