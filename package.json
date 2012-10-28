@@ -16,7 +16,8 @@
    "dependencies" : {
       "ueberDB" : "*",
 	  "vows" : "*",
-	  "q" : "*"
+	  "q" : "*",
+	  "redis" : "*"
    },
    "engines": {
       "node": ">=0.8.11"

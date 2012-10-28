@@ -23,7 +23,7 @@ var backend1 = new rollingpin.Backend({port: 9001}),
 	backend2 = new rollingpin.Backend({port: 9002}),
 	backend3 = new rollingpin.Backend({port: 9003}); // error
 	
-var cacheDb = new rollingpin.CacheDatabase("dirty", {filename: "/Users/neoziro/Work/projects/rollingpin/dirty_db"}),
+var cacheDb = new rollingpin.RedisDatabase(),
 	cacheManager = new rollingpin.CacheManager(cacheDb);
 
 var ruleSuite = new rollingpin.RuleSuite();
