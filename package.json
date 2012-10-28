@@ -14,7 +14,9 @@
       "url": "https://github.com/neoziro/rollingpin/issues"
    },
    "dependencies" : {
-      "q" : ">=0.8.9"
+      "ueberDB" : "*",
+	  "vows" : "*",
+	  "q" : "*"
    },
    "engines": {
       "node": ">=0.8.11"

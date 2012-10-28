@@ -1,6 +1,5 @@
-/*
-exports.Connection = require("./lib/connection").Connection;
-exports.Errors = require("./lib/connection").Errors;
-exports.Notification = require("./lib/notification").Notification;
-exports.Device = require("./lib/notification").Device;
-*/
+exports.Backend = require("./lib/backend").Backend;
+exports.RuleSuite = require("./lib/rule").RuleSuite;
+exports.Rule = require("./lib/rule").Rule;
+exports.CacheManager = require("./lib/cache").CacheManager;
+exports.CacheDatabase = require("./lib/cache").CacheDatabase;
